@@ -35,7 +35,7 @@ try {
       <ul>
         <li><a href="#bio">Bio</a></li>
         <li><a href="#discography">Discography</a></li>
-        <li><a href="#gigs">Upcoming Shows</a></li>
+        <li><a href="#gigs">Gigs</a></li>
       </ul>
     </nav>
   </header>
@@ -55,7 +55,9 @@ try {
 
       <p>In December 2020 the band broke up after the departure of the bassist.</p>
 
-      <p>In 2022 Roman and Dmitry decided to change the sound of the band to more electronic music and heavier rock. </p>
+      <p>In 2022 Roman and Dmitry decided to resurrect the band and change its sound to combination of rock and electronic music. </p>
+
+      <p>Now we are The Minor Thoughts.</p>
 
       <p>Everything else is the future...</p>
 

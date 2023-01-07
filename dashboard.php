@@ -3,6 +3,7 @@ include './database/add-song.php';
 include './database/add-gig.php';
 include './database/get-songs.php';
 include './database/get-gigs.php';
+include './database/change-gig.php';
 
 // Checked if logged in, if not - redirect to login page;
 if ($_SESSION["loggedIn"] === false) {
@@ -23,6 +24,12 @@ if (!empty($_SESSION['gigStatus'])) {
   $gigAddStatusMsg = $_SESSION['gigStatus'];
 } else {
   $gigAddStatusMsg = '';
+}
+
+if (!empty($_SESSION['gigChangeStatus'])) {
+  $changeGigStatus = $_SESSION['gigChangeStatus'];
+} else {
+  $changeGigStatus = '';
 }
 
 try {
@@ -73,6 +80,13 @@ try {
     </section>
 
     <section>
+      <div class="all-songs">
+
+
+      </div>
+    </section>
+
+    <section>
       <h2> Add gig</h2>
       <div class="invalid-feedback">
         <?php echo $gigAddStatusMsg ?>
@@ -90,6 +104,51 @@ try {
 
         <input class="submit-btn" type="submit" value="UPLOAD" name="add-gig">
       </form>
+
+    </section>
+
+    <section>
+      <h2> Change gig</h2>
+      <div class="invalid-feedback">
+        <?php echo $changeGigStatus; ?>
+      </div>
+      <div class="all-gigs">
+        <?php foreach ($gigs as $gig) : ?>
+          <div class="single-gig">
+            <form action="./database/change-gig.php" method="POST">
+              <div>
+                <label for="id">ID</label>
+                <input type="text" readonly name="id" value="<?= $gig['id']; ?>">
+              </div>
+
+              <div>
+                <label for="venue">Venue</label>
+                <input type="text" name="change-venue" value="<?= $gig['venue']; ?>">
+              </div>
+
+              <div>
+                <label for="venue">Date</label>
+                <input type="text" name="change-date" value="<?= $gig['date']; ?>">
+              </div>
+
+              <div>
+                <label for="venue">Time</label>
+                <input type="text" name="change-time" value="<?= $gig['time']; ?>">
+              </div>
+
+              <div>
+                <label for="venue">Upcoming</label>
+                <input class="checkbox" type="checkbox" name="change-upcoming" <?php echo $gig['upcoming']? 'checked' : null ?> id="">
+              </div>
+
+              <input type="submit" value="Change gig" name="change-gig">
+              <input type="submit" value="Delete gig" name="delete-gig">
+            </form>
+
+
+          </div>
+        <?php endforeach; ?>
+      </div>
 
     </section>
 

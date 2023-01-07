@@ -241,6 +241,8 @@ section p {
   cursor: pointer;
 }
 
+/* Dashboard */
+
 .dashboard > section {
   display: flex;
   flex-direction: column;
@@ -253,6 +255,33 @@ section p {
   flex-direction: column;
   width: 50%;
 }
+
+/* Change gig */
+
+.all-gigs {
+  display: flex;
+  flex-direction: column;
+
+}
+
+.single-gig {
+  width: 100%;
+  display: flex;
+  border: solid 2px #c9c9c9;
+  padding: 1rem;
+  margin-bottom: 2rem;
+}
+
+.single-gig form {
+  display: flex;
+  flex-flow: row;
+}
+
+.single-gig .checkbox {
+  width: 30px;
+  height: 30px;
+}
+
 
 /* Songs section */
 
@@ -309,6 +338,7 @@ section p {
   /* mix-blend-mode:difference; */
 }
 
+/* Gig data */
 
 .gig-list {
   margin: 0 auto;
