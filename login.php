@@ -1,25 +1,65 @@
-<?php 
-session_start();
-define('DB_HOST', 'localhost');
-define('DB_NAME', 'minor_thoughts');
+<?php
+// session_start();
+include './database/connection.php';
+$db = connect();
 $username = $password = '';
-$connectionErr = false;
-$connectionErrMessage = 'Wrong email or password';
+$usernameErr = $passwordErr = $loginErr = "";
+$_SESSION["loggedIn"] = false;
+$_SESSION["username"] = '';
+
 
 if (isset($_POST['login'])) {
-  
-  $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-  $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-  try {
-    $connection = new mysqli(DB_HOST, $username, $password, DB_NAME);
-    $_SESSION['connection'] = $connection;
-    header("Location: ./dashboard.php");
-  } catch (\Throwable $th) {
-    $connectionErr = true;
+
+  // Check if username written
+  if (empty($_POST["username"])) {
+    $usernameErr = "Please enter username.";
+  } else {
+    $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+  }
+
+  // Check if password written
+  if (empty($_POST["password"])) {
+    $passwordErr = "Please enter password.";
+  } else {
+    $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+  }
+
+  if (!empty($_POST["username"]) && !empty($_POST["password"])) {
+    try {
+      $query = $db->prepare("SELECT id, username, password FROM user WHERE username = :username");
+      $query->execute(['username' => $username]);
+      $userdata = $query->fetch(PDO::FETCH_ASSOC);
+
+      // Check if user exists
+      if (empty($userdata)) {
+        $usernameErr = "No user found.";
+      } else {
+        // Check password correctness
+        $hashedPassword = $userdata['password'];
+        if (password_verify($password, $hashedPassword)) {
+          // If password is correct, start a new session
+
+          // Store data in session variables
+          $_SESSION["loggedIn"] = true;
+          $_SESSION["username"] = $username;
+
+          // Redirect user to dashboard
+          header("Location: ./dashboard.php");
+          exit;
+        } else {
+          // If password is incorrect - show error
+          $passwordErr = 'Wrong password.';
+        }
+      }
+    } catch (Exception $e) {
+      echo $e->getMessage();
+    }
   }
 }
 
+
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -36,16 +76,19 @@ if (isset($_POST['login'])) {
   <div class="login">
     <form action="<?php $_SERVER['PHP_SELF']; ?>" method="POST">
       <label for="username">Username</label>
-      <input type="text" name="username" required>
+      <input type="text" name="username">
+      <div class="invalid-feedback">
+        <?php echo $usernameErr ?>
+      </div>
 
       <label for="password">Password</label>
-      <input type="text" name="password" required>
+      <input type="text" name="password">
+      <div class="invalid-feedback">
+        <?php echo $passwordErr ?>
+      </div>
 
       <input class="submit-btn" type="submit" value="Login" name="login">
 
-      <div class="invalid-feedback">
-        <?php echo $connectionErr ? $connectionErrMessage : null ?>
-      </div>
     </form>
 
   </div>

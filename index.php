@@ -1,5 +1,17 @@
-<?php 
+<?php
+include './database/get-songs.php';
+include './database/get-gigs.php';
 
+try {
+  // Get gigs and songs
+  $songs = getSongs();
+  $gigs = getGigs();
+} catch (Exception $e) {
+  // If an error is thrown, echo the message
+  echo $e->getMessage();
+}
+
+// print_r($songs);
 ?>
 
 <!DOCTYPE html>
@@ -16,12 +28,14 @@
 
 <body>
   <header>
-    <div class="header-background"></div>
+    <div class="header-background">
+      <h1>The Minor Thoughts</h1>
+    </div>
     <nav class="navigation">
       <ul>
         <li><a href="#bio">Bio</a></li>
         <li><a href="#discography">Discography</a></li>
-        <li><a href="#shows">Upcoming Shows</a></li>
+        <li><a href="#gigs">Upcoming Shows</a></li>
       </ul>
     </nav>
   </header>
@@ -47,9 +61,49 @@
 
     </section>
 
-    <section id="discrography"> 
+    <section id="discography">
+      <h2>Discography</h2>
+      <div class="songs">
+        <?php foreach ($songs as $song) : ?>
+          <div class="song-container">
+            <img class="song-image" src="./media/song_covers/<?= $song['image']; ?>" alt="">
+            <div class="song-data">
+              <!-- <h3 class="song-name"><?= $song['name']; ?></h3> -->
+              <div class="spotify">
+                <a href=""><img src="./media/logos/spotify-logo.png" alt=""></a>
+                <h3>TBA</h3>
+              </div>
+              <div class="apple">
+                <a href=""><img src="./media/logos/apple-logo.png" alt=""></a>
+                <h3>TBA</h3>
+              </div>
+            </div>
+          </div>
+        <?php endforeach; ?>
+      </div>
+    </section>
 
+    <section id="gigs">
+      <h2>Gigs</h2>
+      <div class="gig-list">
+        <?php if(empty($gigs)): ?>
+          <h3>There are no gigs at the moment. Stay tuned.</h3>
+        <?php else: ?>
+          <?php foreach ($gigs as $gig): ?>
+            <div class="gig-container <?php echo $gig['upcoming']?: 'completed' ?>">
+              <?php if(!$gig['upcoming']): ?>
+                <img class="gig-done-stamp" src="./media/logos/done-stamp.png" alt="">
+              <?php endif;?>
 
+              <h4>Where: <?php echo $gig['venue'] ?></h4>
+              <h4>When: <?php echo $gig['date'] ?></h4>
+              <h4>Time: <?php echo $gig['time'] ?></h4>
+              <!-- <?php print_r($gig);?> -->
+            </div>
+          <?php endforeach; ?>
+
+        <?php endif; ?>
+      </div>
     </section>
 
   </main>

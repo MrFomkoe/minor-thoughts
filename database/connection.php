@@ -1,35 +1,26 @@
 <?php
-// define('DB_HOST', 'db5011443853.hosting-data.io');
-// define('DB_NAME', 'dbs9655278');
-
-// define('DB_HOST', 'db5011438015.hosting-data.io');
-// define('DB_USER', 'dbu2969000');
-// define('DB_PASSWORD', 'iif2W3pkZ93wJjz');
-// define('DB_NAME', 'dbs9650697');
-
-// dbu2259319
-// 4842Aezakmi920808
-
-define('DB_HOST', 'localhost');
-// define('DB_USER', 'roman');
-// define('DB_PASSWORD', '12345');
-define('DB_NAME', 'minor_thoughts');
-
-$username = $password = '';
+session_start();
 $connectionErr = false;
-echo var_dump($connectionErr);
-$connectionErrMessage = 'Wrong email or password';
-$connection;
+// Connect to the database and return the database object
+function connect() {
+  // Set the hostname for CodeCademy's platform
+  $hostname = 'localhost';
 
-if (isset($_POST['login'])) {
+  // Set the database name
+  $dbname = 'minor_thoughts';
 
-  $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
-  $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+  // Set the username and password with permissions to the database
+  $username = 'roman';
+  $password = '12345';
+  
+  // Create the DSN (data source name) by combining the database type, hostname and dbname
+  $dsn = "mysql:host=$hostname;dbname=$dbname";
+
+  // Create the try/catch blocks here
   try {
-    $connection = new mysqli(DB_HOST, $username, $password, DB_NAME);
-  } catch (\Throwable $th) {
-    $connectionErr = true;
-    echo 'error';
-    header("Location: ../login.php");
+    return new PDO($dsn, $username, $password);
+  } catch (Exception $e) {
+    echo $e->getMessage();
   }
 }
+
